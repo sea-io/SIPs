@@ -15,8 +15,6 @@ function commit() {
 
 function push() {
     git push -u origin master
-    echo $GIT_ACCOUT
-    echo $GIT_PASSWORD
 }
 
 if [ $1 ]
