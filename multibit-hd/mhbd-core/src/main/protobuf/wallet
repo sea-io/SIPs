@@ -1,42 +1,3 @@
-// Copyright (c) 2018 The Bitcoin Core developers
-// Distributed under the MIT software license, see the accompanying
-// file COPYING or http://www.opensource.org/licenses/mit-license.php.
-
-#include <interfaces/wallet.h>
-
-#include <amount.h>
-#include <chain.h>
-#include <consensus/validation.h>
-#include <init.h>
-#include <interfaces/chain.h>
-#include <interfaces/handler.h>
-#include <net.h>
-#include <policy/feerate.h>
-#include <policy/fees.h>
-#include <policy/policy.h>
-#include <primitives/transaction.h>
-#include <rpc/server.h>
-#include <scheduler.h>
-#include <script/ismine.h>
-#include <script/standard.h>
-#include <support/allocators/secure.h>
-#include <sync.h>
-#include <timedata.h>
-#include <ui_interface.h>
-#include <uint256.h>
-#include <util/system.h>
-#include <validation.h>
-#include <wallet/feebumper.h>
-#include <wallet/fees.h>
-#include <wallet/rpcwallet.h>
-#include <wallet/wallet.h>
-#include <wallet/walletutil.h>
-
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
-
 namespace interfaces {
 namespace {
 
@@ -68,7 +29,6 @@ public:
     CReserveKey m_key;
 };
 
-//! Construct wallet tx struct.
 WalletTx MakeWalletTx(interfaces::Chain::Lock& locked_chain, CWallet& wallet, const CWalletTx& wtx)
 {
     WalletTx result;
@@ -96,7 +56,6 @@ WalletTx MakeWalletTx(interfaces::Chain::Lock& locked_chain, CWallet& wallet, co
     return result;
 }
 
-//! Construct wallet tx status struct.
 WalletTxStatus MakeWalletTxStatus(interfaces::Chain::Lock& locked_chain, const CWalletTx& wtx)
 {
     LockAnnotation lock(::cs_main); // Temporary, for CheckFinalTx below. Removed in upcoming commit.
@@ -117,7 +76,6 @@ WalletTxStatus MakeWalletTxStatus(interfaces::Chain::Lock& locked_chain, const C
     return result;
 }
 
-//! Construct wallet TxOut struct.
 WalletTxOut MakeWalletTxOut(interfaces::Chain::Lock& locked_chain,
     CWallet& wallet,
     const CWalletTx& wtx,
@@ -449,19 +407,6 @@ public:
         }
         return result;
     }
-    CAmount getRequiredFee(unsigned int tx_bytes) override { return GetRequiredFee(*m_wallet, tx_bytes); }
-    CAmount getMinimumFee(unsigned int tx_bytes,
-        const CCoinControl& coin_control,
-        int* returned_target,
-        FeeReason* reason) override
-    {
-        FeeCalculation fee_calc;
-        CAmount result;
-        result = GetMinimumFee(*m_wallet, tx_bytes, coin_control, ::mempool, ::feeEstimator, &fee_calc);
-        if (returned_target) *returned_target = fee_calc.returnedTarget;
-        if (reason) *reason = fee_calc.reason;
-        return result;
-    }
     unsigned int getConfirmTarget() override { return m_wallet->m_confirm_target; }
     bool hdEnabled() override { return m_wallet->IsHDEnabled(); }
     bool canGetAddresses() override { return m_wallet->CanGetAddresses(); }
@@ -506,33 +451,3 @@ public:
 
     std::shared_ptr<CWallet> m_wallet;
 };
-
-class WalletClientImpl : public ChainClient
-{
-public:
-    WalletClientImpl(Chain& chain, std::vector<std::string> wallet_filenames)
-        : m_chain(chain), m_wallet_filenames(std::move(wallet_filenames))
-    {
-    }
-    void registerRpcs() override { return RegisterWalletRPCCommands(::tableRPC); }
-    bool verify() override { return VerifyWallets(m_chain, m_wallet_filenames); }
-    bool load() override { return LoadWallets(m_chain, m_wallet_filenames); }
-    void start(CScheduler& scheduler) override { return StartWallets(scheduler); }
-    void flush() override { return FlushWallets(); }
-    void stop() override { return StopWallets(); }
-    ~WalletClientImpl() override { UnloadWallets(); }
-
-    Chain& m_chain;
-    std::vector<std::string> m_wallet_filenames;
-};
-
-} // namespace
-
-std::unique_ptr<Wallet> MakeWallet(const std::shared_ptr<CWallet>& wallet) { return wallet ? MakeUnique<WalletImpl>(wallet) : nullptr; }
-
-std::unique_ptr<ChainClient> MakeWalletClient(Chain& chain, std::vector<std::string> wallet_filenames)
-{
-    return MakeUnique<WalletClientImpl>(chain, std::move(wallet_filenames));
-}
-
-} // namespace interfaces
