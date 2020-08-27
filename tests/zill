@@ -1,0 +1,52 @@
+#include "Constants.h"
+#include "libUtils/DataConversion.h"
+#include "libUtils/SafeMath.h"
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+
+using namespace std;
+
+using boost::property_tree::ptree;
+
+struct PTree {
+  static ptree& GetInstance() {
+    static ptree pt;
+    read_xml("constants.xml", pt);
+
+    return pt;
+  }
+  PTree() = delete;
+  ~PTree() = delete;
+};
+
+unsigned int ReadConstantNumeric(const string& propertyName,
+                                 const char* path = "node.general.") {
+  auto pt = PTree::GetInstance();
+  return pt.get<unsigned int>(path + propertyName);
+}
+
+double ReadConstantDouble(const string& propertyName,
+                          const char* path = "node.general.") {
+  auto pt = PTree::GetInstance();
+  return pt.get<double>(path + propertyName);
+}
+
+string ReadConstantString(const string& propertyName,
+                          const char* path = "node.general.") {
+  auto pt = PTree::GetInstance();
+  return pt.get<string>(path + propertyName);
+}
+
+const vector<string> ReadAccountsFromConstantsFile(const string& propName) {
+  auto pt = PTree::GetInstance();
+  vector<string> result;
+  for (auto& acc : pt.get_child("node.accounts")) {
+    auto child = acc.second.get_optional<string>(propName);
+    if (child) {
+      // LOG_GENERAL("constants " << child.get());
+      result.push_back(child.get());
+    }
+  }
+  return result;
+}
