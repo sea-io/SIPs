@@ -1,0 +1,11 @@
+const unsigned int DEBUG_LEVEL{ReadConstantNumeric("DEBUG_LEVEL")};
+const bool ENABLE_DO_REJOIN{ReadConstantString("ENABLE_DO_REJOIN") == "true"};
+const bool LOOKUP_NODE_MODE{ReadConstantString("LOOKUP_NODE_MODE") == "true"};
+const unsigned int MAX_ENTRIES_FOR_DIAGNOSTIC_DATA{
+    ReadConstantNumeric("MAX_ENTRIES_FOR_DIAGNOSTIC_DATA")};
+const uint16_t CHAIN_ID{(uint16_t)ReadConstantNumeric("CHAIN_ID")};
+const string GENESIS_PUBKEY{
+    ReadConstantString("GENESIS_PUBKEY", "node.general.")};
+const unsigned int UPGRADE_TARGET_DS_NUM{
+    ReadConstantNumeric("UPGRADE_TARGET_DS_NUM")};
+const string STORAGE_PATH{ReadConstantString("STORAGE_PATH", "node.general.")};
