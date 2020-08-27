@@ -57,3 +57,13 @@ message Contact {
 message Contacts {
   repeated Contact contact = 1;                  // the contacts, repeated
 }
+
+
+/** 
+ * A single create 
+ */
+message create {
+
+  repeated Contact contact = 10;                  // the contacts, repeated, defalut
+  required string name = 99;
+}
