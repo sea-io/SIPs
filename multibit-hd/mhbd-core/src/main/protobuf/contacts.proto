@@ -51,8 +51,9 @@ message Contact {
 }
 
 /**
- * A collection of contacts
+ * A collection of contacts 
  */
+ // the contacts, repeated
 message Contacts {
   repeated Contact contact = 1;                  // the contacts, repeated
 }
