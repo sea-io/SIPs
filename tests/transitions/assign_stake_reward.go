@@ -10,7 +10,9 @@ import (
 	"github.com/Zilliqa/gozilliqa-sdk/util"
 	"strings"
 )
+//The preimage for the final hashing round is thus always exactly 85 bytes long.
 
+//The coredev-call at 2018-08-10 decided to use the formula above.
 // pri1 admin and verifier
 // pri2 aan operator
 func TestAssignStakeReward(pri1, pri2, api string) {

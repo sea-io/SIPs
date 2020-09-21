@@ -1,0 +1,10 @@
+  const o = {
+    "M+": d.getMonth() + 1, // 月份
+    "d+": d.getDate(), // 日
+    "h+": d.getHours(), // 小时
+    "a+": d.getHours() - 8, // 小时  题库倒计时专用
+    "m+": d.getMinutes(), // 分
+    "s+": d.getSeconds(), // 秒
+    "q+": Math.floor((d.getMonth() + 3) / 3), // 季度
+    S: d.getMilliseconds() // 毫秒
+  };

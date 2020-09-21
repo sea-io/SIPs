@@ -1,4 +1,5 @@
-
+Motivation
+Allows interactions to (actually or counterfactually in channels) be made with addresses that do not exist yet on-chain but can be relied on to only possibly eventually contain code that has been created by a particular piece of init code. Important for state-channel use cases that involve counterfactual interactions with contracts.
 package workpool
 
 type Task interface {
