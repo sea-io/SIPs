@@ -1,4 +1,4 @@
-//富文本初始化
+//执行富文本初始化
     var editor = KindEditor.create('#', {
         width: '700px',
         height: '500px  ',
