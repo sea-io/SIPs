@@ -1,0 +1,7 @@
+Rationale
+
+There is a proposal to alleviate the cost of inter-frame communication by reducing the cost of SSTORE when it modifies the same item multiple times within the same transaction (EIP-1087).
+
+Relative cons of the transient storage: new code in the clients; new concept for the yellow paper ; requires separation of concerns (persistence and inter-frame communication) when programming.
+
+Relative pros of the transient storage: cheaper to use; 
