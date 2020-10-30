@@ -24,3 +24,6 @@ Transient storage does not interact with reverts or invalid transactions, that m
 When the protocol version as negotiated in the "ver" message is greater than 60000, the "ping" message must contain a uint64 field called "nonce". A peer sending "ping" should set the nonce to a random value, and it is then echoed back by the recipient in a new "pong" message that also contains a single uint64 field.
 
 In this way, the client can send a ping and measure the time taken to receive the corresponding pong. If a client sends two pings before hearing back the first pong, the responses can be distinguished using the nonce. If the client chooses to never overlap pings in this way it should simply set the nonce value to zero.
+
+Backward compatibility
+Clients must opt-in to the new feature by advertising a protocol version > 60000. Clients with older protocol versions are not expected to provide a nonce in the ping message and will not be sent a pong.
